@@ -1,22 +1,24 @@
-# Development Setup
+# Simple Text RAG
 
-## Create Virtual Env
+## Development Setup
+
+### Create Virtual Env
 ```bash
 python3 -m venv .venv
 ```
 
-## Install requirements
+### Install requirements
 ```bash
 make requirements
 make requirements-dev
 ```
 
-## Setup .env file
+### Setup .env file
 ```bash
 cp .env.example .env
 ```
 
-## Run linter
+### Run linter
 ```bash
 make lint
 ```
