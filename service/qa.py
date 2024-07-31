@@ -12,9 +12,7 @@ class QAServiceServicer(qa_pb2_grpc.QAServiceServicer):
         return all(c.isalnum() or c == '_' for c in collection_name)
 
     def CreateCollection(self, request, context):
-        logging.info(
-            f"Received CreateCollection request {request.name} , file_url {request.file_url}"
-        )
+        logging.info(f"Received CreateCollection request {request.name} , file_url {request.file_url}")
 
         if not self.check_collection_name_valid(request.name):
             raise ValueError(f"Invalid collection name: {request.name}")
@@ -27,12 +25,10 @@ class QAServiceServicer(qa_pb2_grpc.QAServiceServicer):
 
     def GetAnswer(self, request, context):
         logging.info(
-            f"Received GetAnswer request collection_name {request.collection_name}, question: {request.question}"
-        )
+            f"Received GetAnswer request collection_name {request.collection_name}, question: {request.question}")
 
         if not self.check_collection_name_valid(request.collection_name):
-            raise ValueError(
-                f"Invalid collection name: {request.collection_name}")
+            raise ValueError(f"Invalid collection name: {request.collection_name}")
 
         vectorstore = self.pipeline.load_vectorstore(request.collection_name)
         qa_chain = self.pipeline.setup_qa_chain(vectorstore)

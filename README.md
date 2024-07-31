@@ -1,5 +1,12 @@
 # Simple Text RAG
 
+Simple Text RAG Python application that allows adding a document then asking questions about it. Uses:
+- LangChain
+- Groq API
+- ChromaDB Vector Store
+- gRPC API
+
+
 ## Development Setup
 
 ### Create Virtual Env
@@ -18,7 +25,18 @@ make requirements-dev
 cp .env.example .env
 ```
 
+### Regenerate Protobuf output files
+Only needed if making changes to the proto files
+```bash
+make gen-protos
+```
+
 ### Run linter
 ```bash
 make lint
+```
+
+### Run server
+```bash
+make server
 ```

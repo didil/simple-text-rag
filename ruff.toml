@@ -1,0 +1,6 @@
+exclude = ["grpc_gen/"] # Ignore generated files
+
+[lint.per-file-ignores]
+"server.py" = ["E402"]
+"poc.py" = ["E402"]
+

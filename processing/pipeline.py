@@ -21,54 +21,39 @@ class Pipeline:
         return response.text
 
     def load_and_split_text(self, document_text: str) -> list[str]:
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000,
-                                                       chunk_overlap=200,
-                                                       length_function=len)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len)
         chunks = text_splitter.split_text(document_text)
         return chunks
 
-    def create_vectorstore(self, collection_name: str,
-                           chunks: list[str]) -> Chroma:
+    def create_vectorstore(self, collection_name: str, chunks: list[str]) -> Chroma:
 
-        persist_directory = os.path.join(self.persist_base_directory,
-                                         collection_name)
-        logging.info(
-            f"Using chroma persistence directory: {persist_directory}")
+        persist_directory = os.path.join(self.persist_base_directory, collection_name)
+        logging.info(f"Using chroma persistence directory: {persist_directory}")
 
-        logging.info(
-            f"Creating new Chroma vector store for collection {collection_name} ..."
-        )
-        vectorstore = Chroma.from_texts(
-            chunks,
-            self.embeddings,
-            collection_name=collection_name,
-            client_settings=Settings(anonymized_telemetry=False,
-                                     is_persistent=True,
-                                     persist_directory=persist_directory))
+        logging.info(f"Creating new Chroma vector store for collection {collection_name} ...")
+        vectorstore = Chroma.from_texts(chunks,
+                                        self.embeddings,
+                                        collection_name=collection_name,
+                                        client_settings=Settings(anonymized_telemetry=False,
+                                                                 is_persistent=True,
+                                                                 persist_directory=persist_directory))
 
         return vectorstore
 
     def load_vectorstore(self, collection_name: str) -> Chroma:
-        persist_directory = os.path.join(self.persist_base_directory,
-                                         collection_name)
-        logging.info(
-            f"Using chroma persistence directory: {persist_directory}")
+        persist_directory = os.path.join(self.persist_base_directory, collection_name)
+        logging.info(f"Using chroma persistence directory: {persist_directory}")
         if not os.path.exists(persist_directory):
-            logging.error(
-                f"Chroma vector store not found for collection {collection_name} ..."
-            )
+            logging.error(f"Chroma vector store not found for collection {collection_name} ...")
             raise ValueError("Chroma vector store not found")
 
-        logging.info(
-            f"Loading existing Chroma vector store for collection {collection_name} ..."
-        )
+        logging.info(f"Loading existing Chroma vector store for collection {collection_name} ...")
         vectorstore = Chroma(persist_directory=persist_directory,
                              embedding_function=self.embeddings,
                              collection_name=collection_name,
-                             client_settings=Settings(
-                                 anonymized_telemetry=False,
-                                 is_persistent=True,
-                                 persist_directory=persist_directory))
+                             client_settings=Settings(anonymized_telemetry=False,
+                                                      is_persistent=True,
+                                                      persist_directory=persist_directory))
 
         return vectorstore
 
@@ -79,11 +64,9 @@ class Pipeline:
         llm_max_tokens_str = os.environ.get('LLM_MAX_TOKENS')
         llm_max_tokens = int(llm_max_tokens_str) if llm_max_tokens_str else 512
 
-        llm = ChatGroq(model=os.environ.get('LLM_MODEL_NAME',
-                                            'llama-3.1-70b-versatile'),
+        llm = ChatGroq(model=os.environ.get('LLM_MODEL_NAME', 'llama-3.1-70b-versatile'),
                        temperature=llm_temp,
                        max_tokens=llm_max_tokens,
                        stop_sequences=None)
-        qa_chain = RetrievalQA.from_chain_type(
-            llm=llm, chain_type="stuff", retriever=vectorstore.as_retriever())
+        qa_chain = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=vectorstore.as_retriever())
         return qa_chain

@@ -1,5 +1,3 @@
-
-
 lint:
 	ruff check .
 
@@ -11,7 +9,6 @@ requirements-dev:
 
 gen-proto:
 	python -m grpc_tools.protoc -Igrpc_gen=protos --python_out=. --pyi_out=. --grpc_python_out=. protos/*.proto
-
 
 server:
 	python server.py
