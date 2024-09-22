@@ -8,8 +8,6 @@ Simple Text RAG Python application that allows adding a document then asking que
 
 *This is a demo app. The code is not production ready*
 
-The companion article can be found on [Adil's Backend & Cloud Engineering Blog](https://open.substack.com/pub/didil/p/simple-text-rag?r=63gj&utm_campaign=post&utm_medium=web)
-
 ## Development Setup
 
 ### Create Virtual Env
